@@ -21,7 +21,8 @@ from frappe.utils import (
 )
 from frappe.query_builder.functions import Count, Sum
 class CustomSalarySlip(SalarySlip):
-    
+    ### make period = 12
+    ### Assigned self.remaining_sub_periods = 12
     def calculate_net_pay(self, skip_tax_breakup_computation: bool = False):
       
       def set_gross_pay_and_base_gross_pay():
@@ -32,12 +33,9 @@ class CustomSalarySlip(SalarySlip):
 
       if self.salary_structure:
         self.calculate_component_amounts("earnings")
-
-      # get remaining numbers of sub-period (period for which one salary is processed)
       if self.payroll_period:
         self.remaining_sub_periods = 12
-        # frappe.msgprint(f"{self.remaining_sub_periods}")
-        # print(f"self.remaining_sub_periods\n{self.remaining_sub_periods }")
+
       set_gross_pay_and_base_gross_pay()
 
       if self.salary_structure:
@@ -49,16 +47,6 @@ class CustomSalarySlip(SalarySlip):
       self.set_net_pay()
       if not skip_tax_breakup_computation:
         self.compute_income_tax_breakup()
-
-# calculate_component_amounts
-# set_loan_repayment
-# set_precision_for_component_amounts
-# set_net_pay
-# compute_income_tax_breakup
-
-
-
-
     def compute_taxable_earnings_for_year(self):
       # get taxable_earnings, opening_taxable_earning, paid_taxes for previous period
       self.previous_taxable_earnings, exempted_amount = self.get_taxable_earnings_for_prev_period(
@@ -86,13 +74,6 @@ class CustomSalarySlip(SalarySlip):
       self.previous_axable_earnings = 0
       # frappe.msgprint(f"sec is {self.previous_axable_earnings}")
       self.other_incomes = self.get_income_form_other_sources() or 0.0
-      print(f"previous_taxable_earnings(33) =========={self.previous_taxable_earnings}")
-      print(f"current_structured_taxable_earnings(33) =========={self.current_structured_taxable_earnings}")
-      print(f"future_structured_taxable_earnings(33) =========={self.future_structured_taxable_earnings}")
-      print(f"previous_taxable_earnings(33) =========={self.future_structured_taxable_earnings}")
-      print(f"previous_taxable_earnings(33) =========={self.previous_taxable_earnings}")
-      print(f"previous_taxable_earnings(33) =========={self.previous_taxable_earnings}")
-      print(f"previous_taxable_earnings(33) =========={self.previous_taxable_earnings}")
       # Total taxable earnings including additional and other incomes
       self.total_taxable_earnings = (
         self.previous_axable_earnings
@@ -103,11 +84,6 @@ class CustomSalarySlip(SalarySlip):
         + self.unclaimed_taxable_benefits
         - self.total_exemption_amount
       )
-      # frappe.msgprint(f" total_taxable_earnings {self.total_taxable_earnings}")
-      # frappe.msgprint(f" total_exemption_amount {self.total_exemption_amount}")
-      print(f"self.total_taxable_earnings{self.total_taxable_earnings}")
-      # Total taxable earnings without additional earnings with full tax
-      # frappe.msgprint(f"third is {self.previous_axable_earnings}")
       self.total_taxable_earnings_without_full_tax_addl_components = (
         self.total_taxable_earnings - self.current_additional_earnings_with_full_tax
       )
@@ -166,15 +142,10 @@ class CustomSalarySlip(SalarySlip):
         amount, additional_amount = rounded(amount or 0), rounded(additional_amount or 0)
 
       return amount, additional_amount
-# custom_salary_slip = CustomSalarySlip().calculate_net_pay()
 
+    ###1- assigned self.previous_total_paid_taxes = 0
     def calculate_variable_tax(self, tax_component):
       self.previous_total_paid_taxes = 0
-      # self.previous_total_paid_taxes = self.get_tax_paid_in_period(
-      # 	self.payroll_period.start_date, self.start_date, tax_component
-      # )
-      
-      # Structured tax amount
       eval_locals, default_data = self.get_data_for_eval()
       self.total_structured_tax_amount = calculate_tax_by_tax_slab(
         self.total_taxable_earnings_without_full_tax_addl_components,
@@ -185,10 +156,6 @@ class CustomSalarySlip(SalarySlip):
       self.current_structured_tax_amount = (
         self.total_structured_tax_amount - self.previous_total_paid_taxes
       ) / self.remaining_sub_periods
-      print(f"self.total_structured_tax_amount === {self.total_structured_tax_amount}")
-      print(f"self.previous_total_paid_taxes === {self.previous_total_paid_taxes}")
-      print(f"self.remaining_sub_periods === {self.remaining_sub_periods  }")
-      print(f" self.current_structured_tax_amount === {self.current_structured_tax_amount }")
       # Total taxable earnings with additional earnings with full tax
       self.full_tax_on_additional_earnings = 0.0
       if self.current_additional_earnings_with_full_tax:
@@ -210,9 +177,4 @@ class CustomSalarySlip(SalarySlip):
           "current_tax_amount": current_tax_amount,
         }
       )
-      print(f"current_tax_amount === {current_tax_amount}")
-      print(f"self.current_structured_tax_amount === {self.current_structured_tax_amount}")
-      print(f"self.full_tax_on_additional_earnings === {self.full_tax_on_additional_earnings}")
-      print(f"============================================================== ")
-      print(f"============================================================== ")
       return current_tax_amount
