@@ -42,7 +42,7 @@ from hrms.payroll.doctype.employee_benefit_claim.employee_benefit_claim import (
 	get_benefit_claim_amount,
 	get_last_payroll_period_benefits,
 )
-from hrms.payroll.doctype.payroll_entry.payroll_entry import get_salary_withholdings, get_start_end_dates
+from hrms.payroll.doctype.payroll_entry.payroll_entry import  get_start_end_dates
 from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
@@ -135,7 +135,7 @@ class tax(TransactionBase):
 		return self.__actual_end_date
 
 	def validate(self):
-		self.check_salary_withholding()
+		# self.check_salary_withholding()
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
 		self.validate_dates()
@@ -170,13 +170,13 @@ class tax(TransactionBase):
 					alert=True,
 				)
 
-	def check_salary_withholding(self):
-		withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
-		if withholding:
-			self.salary_withholding = withholding[0].salary_withholding
-			self.salary_withholding_cycle = withholding[0].salary_withholding_cycle
-		else:
-			self.salary_withholding = None
+	# def check_salary_withholding(self):
+	# 	withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
+	# 	if withholding:
+	# 		self.salary_withholding = withholding[0].salary_withholding
+	# 		self.salary_withholding_cycle = withholding[0].salary_withholding_cycle
+	# 	else:
+	# 		self.salary_withholding = None
 
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
