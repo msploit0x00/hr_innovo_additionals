@@ -257,9 +257,9 @@ class tax(TransactionBase):
 		if self.docstatus == 2:
 			return "Cancelled"
 		else:
-			if self.salary_withholding:
-				return "Withheld"
-			elif self.docstatus == 0:
+			# if self.salary_withholding:
+			# 	return "Withheld"
+			if self.docstatus == 0:
 				return "Draft"
 			elif self.docstatus == 1:
 				return "Submitted"
