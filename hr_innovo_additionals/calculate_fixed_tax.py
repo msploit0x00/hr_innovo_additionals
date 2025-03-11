@@ -77,28 +77,28 @@ class CustomSalarySlip(SalarySlip):
       # Total taxable earnings including additional and other incomes
 
 
+    #   self.total_taxable_earnings = (
+		# 	 self.current_structured_taxable_earnings *12
+		# 	+ self.current_additional_earnings
+		# 	+ self.other_incomes
+		# 	+ self.unclaimed_taxable_benefits
+		# 	- self.total_exemption_amount
+		# )
+
+
+
+
+
+
       self.total_taxable_earnings = (
-			 self.current_structured_taxable_earnings *12
-			+ self.current_additional_earnings
-			+ self.other_incomes
-			+ self.unclaimed_taxable_benefits
-			- self.total_exemption_amount
-		)
-
-
-
-
-
-
-      # self.total_taxable_earnings = (
-      #   self.previous_axable_earnings
-      #   + self.current_structured_taxable_earnings * 12
-      #   + self.future_structured_taxable_earnings
-      #   + self.current_additional_earnings
-      #   + self.other_incomes
-      #   + self.unclaimed_taxable_benefits
-      #   - self.total_exemption_amount
-      # )
+        self.previous_axable_earnings
+        + self.current_structured_taxable_earnings * 12
+        + self.future_structured_taxable_earnings
+        + self.current_additional_earnings
+        + self.other_incomes
+        + self.unclaimed_taxable_benefits
+        - self.total_exemption_amount
+      )
 
 
 
