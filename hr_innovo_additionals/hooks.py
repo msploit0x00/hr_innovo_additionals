@@ -7,13 +7,13 @@ app_license = "mit"
 
 # Apps
 # ------------------
-override_doctype_class = {
-    "Salary Slip": "hr_innovo_additionals.calculate_fixed_tax.CustomSalarySlip",
-}
-
 # override_doctype_class = {
-#     "Salary Slip": "hr_innovo_additionals.tax.tax",
+#     "Salary Slip": "hr_innovo_additionals.calculate_fixed_tax.CustomSalarySlip",
 # }
+
+override_doctype_class = {
+    "Salary Slip": "hr_innovo_additionals.tax.tax",
+}
 
 
 # required_apps = []
